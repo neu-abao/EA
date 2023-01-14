@@ -53,9 +53,9 @@ def seg_depart(sentence):
     return outstr
 ```
 ### 3.1.3 模型建立与训练  
-&emsp;&emsp;朴素贝叶斯模型的建立与训练较为简单，不需要设置较为复杂的参数。首先，对所有输入句子的单词进行统计，建立词典allwords，并利用词典将中文句子数据转为词向量数据vector，之后将数据输入到MultinomialNB模型中进行训练即可。
-&emsp;&emsp;建模训练实践环境：CPU:Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz   2.20 GHz；GPU:Nvidia Geforce GTX 1050ti
-&emsp;&emsp;由于本机实践环境限制，传统模型训练仅采用了10000条句子数据进行训练并进行了测试。代码如下：
+&emsp;&emsp;朴素贝叶斯模型的建立与训练较为简单，不需要设置较为复杂的参数。首先，对所有输入句子的单词进行统计，建立词典allwords，并利用词典将中文句子数据转为词向量数据vector，之后将数据输入到MultinomialNB模型中进行训练即可。  
+&emsp;&emsp;建模训练实践环境：CPU:Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz   2.20 GHz；GPU:Nvidia Geforce GTX 1050ti  
+&emsp;&emsp;由于本机实践环境限制，传统模型训练仅采用了10000条句子数据进行训练并进行了测试。代码如下：  
 
 ```python
 labels = array(labels)

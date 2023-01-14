@@ -185,9 +185,6 @@ def train_fn(data_loader, model, optimizer, device, scheduler=None):
         sentiment = d["sentiment"]
         orig_tweet = d["orig_tweet"]
 
-        #         print(ids, type(ids), ids.shape)
-        #         print(token_type_ids, type(token_type_ids), token_type_ids.shape)
-        #         print(mask,type(mask), mask.shape)
         sentiment = sentiment.to(device)
         ids = ids.to(device, dtype=torch.long)
         token_type_ids = token_type_ids.to(device, dtype=torch.long)
@@ -199,14 +196,13 @@ def train_fn(data_loader, model, optimizer, device, scheduler=None):
             mask=mask,
             token_type_ids=token_type_ids,
         )
-        #         loss = loss_fn(outputs_start, outputs_end, targets_start, targets_end)
+
         loss = loss_func(outputs, sentiment)
         loss.backward()
         optimizer.step()
         scheduler.step()
 
-        # torch.softmax或torch.max 参数dim是函数索引的维度0/1，0是每列的最大值，1是每行的最大值
-        # 函数会返回两个tensor，第一个tensor是每行的最大值；第二个tensor是每行最大值的索引
+
         outputs = torch.softmax(outputs, dim=1).cpu().detach().numpy()
 
         if bi % 120 == 0:
@@ -246,7 +242,7 @@ model.to(device)
 num_train_steps = int(len(df_train) / TRAIN_BATCH_SIZE * EPOCHS)
 param_optimizer = list(model.named_parameters())
 
-# 这里是设置不应该添加正则化项的参数，一般是BN层的可训练参数及卷积层和全连接层的 bias
+
 no_decay = ["bias", "LayerNorm.bias", "LayerNorm.weight"]
 optimizer_parameters = [
     {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': 0.001},
@@ -254,17 +250,14 @@ optimizer_parameters = [
 ]
 optimizer = AdamW(optimizer_parameters, lr=3e-5)
 
-# 学习率变动函数，这里使用的是预热学习率
-# 在预热期间，学习率从0线性增加到优化器中的初始lr。
-# 在预热阶段之后创建一个schedule，使其学习率从优化器中的初始lr线性降低到0
-# 这里没使用预热，直接从初始学习率开始下降
+
 scheduler = get_linear_schedule_with_warmup(
     optimizer,
     num_warmup_steps=0,  # The number of steps for the warmup phase.
     num_training_steps=num_train_steps # The total number of training steps
 )
 
-# es = utils.EarlyStopping(patience=2, mode="max")
+
 
 
 # 训练EPOCHS个批次
@@ -350,10 +343,10 @@ test_dataset = MyDatasetTest(
 test_data_loader = torch.utils.data.DataLoader(
     test_dataset,
     batch_size=TEST_BATCH_SIZE,
-    num_workers=0 # 这个是多线程数，最好设为0
+    num_workers=0 
 )
 
-# 小规模测试集，用于实际观察
+# 小规模测试集
 test_sample_dataset = MyDatasetTest(
     tweet=df_test.text[:10].values,
 #     sentiment=df_test.sentiment[:10].values,
@@ -362,7 +355,7 @@ test_sample_dataset = MyDatasetTest(
 test_sample_loader = torch.utils.data.DataLoader(
     test_sample_dataset,
     batch_size=TEST_BATCH_SIZE,
-    num_workers=0 # 这个是多线程数，最好设为0
+    num_workers=0 
 )
 
 #测试
