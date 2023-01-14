@@ -54,8 +54,7 @@ def seg_depart(sentence):
 ```
 ### 3.1.3 模型建立与训练  
 &emsp;&emsp;朴素贝叶斯模型的建立与训练较为简单，不需要设置较为复杂的参数。首先，对所有输入句子的单词进行统计，建立词典allwords，并利用词典将中文句子数据转为词向量数据vector，之后将数据输入到MultinomialNB模型中进行训练即可。
-&emsp;&emsp;建模训练实践环境：CPU:Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz   2.20 GHz
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;GPU:Nvidia Geforce GTX 1050ti
+&emsp;&emsp;建模训练实践环境：CPU:Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz   2.20 GHz；GPU:Nvidia Geforce GTX 1050ti
 &emsp;&emsp;由于本机实践环境限制，传统模型训练仅采用了10000条句子数据进行训练并进行了测试。代码如下：
 
 ```python
@@ -114,6 +113,9 @@ with open("chuantong_result_last.csv",'w',newline='',encoding='UTF-8') as f_csv:
 ## 3.2 预训练Bert模型  
 ###  3.2.1 模型介绍  
 &emsp;&emsp;Bert模型是Google于2018年10月发布的自然语言处理模型，利用transformer的注意力机制，能实现很强大的自然语言处理应用。本次实践主要利用Python中transformers库的BertModel类实现，配合Pythorch进行模型的训练评估。
+
+&emsp;&emsp;实践环境：CPU:Intel(R) Xeon(R) Gold 5215 CPU @ 2.50GHz；GPU：NVIDIA TESLA T4 16GB *2
+
 ### 3.2.2 模型建立与训练  
 &emsp;&emsp;本部分数据预处理的过程与上文类似，获取输入数据后进行模型的构建，引入Bert模型，在最顶层加入分类功能，实现自定义的目的。因为功能简单线性，模型构建使用Pytorch的标准线性写法，Bert返回的是768维的张量。代码如下：  
 ```python
@@ -209,7 +211,7 @@ def train_fn(data_loader, model, optimizer, device, scheduler=None):
             accuracy = (sum(pred_y == np.array(sentiment.data.cpu())).item()) / sentiment.size(0)
             print('train accurancy: %.2f' % accuracy)
 ```
-&emsp;&emsp;训练过程中的参数设置如下，本次训练的EPOCHS共设置了3，4，8三组，3和4的训练效果较好，在EPOCHS超过8的情况下会出现在训练集上过拟合的情况，因此测试时仅采用3和4训练所得到的模型进行预测。  
+&emsp;&emsp;训练过程中的参数设置如下，本次训练的EPOCHS共设置了3，4，6，8四组，MAX_LEN共设置了64，128，256和512维四组。  
 ```python
 TRAIN_BATCH_SIZE = 32
 TEST_BATCH_SIZE = 16
@@ -258,4 +260,62 @@ def test_fn(data_loader, model):
 &emsp;&emsp;本次实践评价采用东北大学数据挖掘课题组机器学习测评系统进行结果评估，共包含三项指标，分别为accuracy、recall和macro-F1值。
 ## 4.2 结果展示
 ### 4.2.1 朴素贝叶斯模型评估结果
-### 4.2.2 预训练Bert模型评估结果
+
+&emsp;&emsp;朴素贝叶斯模型的结果评估如图所示：  
+
+![NB](NB.PNG)
+
+### 4.2.2 Bert预训练模型评估结果
+
+&emsp;&emsp;Bert预训练模型3个Epoch，128维测试结果：
+
+![BERT-3](BERT-3.png)
+
+&emsp;&emsp;Bert预训练模型4个Epoch，128维测试结果：
+
+![BERT-4](BERT-4.png)
+
+&emsp;&emsp;Bert预训练模型8个Epoch，128维测试结果：
+
+![BERT-8](BERT-8.png)
+
+&emsp;&emsp;Bert预训练模型6个Epoch，64维测试结果：
+
+![BERT-64-6](BERT-64-6.png)
+
+&emsp;&emsp;Bert预训练模型6个Epoch，256维测试结果：
+
+![BERT-256-6](BERT-256-6.png)
+
+&emsp;&emsp;Bert预训练模型6个Epoch，512维测试结果：
+
+![BERT-6-512](BERT-6-512.png)
+
+### 4.2.3 实践结果分析
+
+&emsp;&emsp;通过对比本次实践结果，能够发现，基于Bert预训练模型的方法总体效果要远远优于传统的机器学习朴素贝叶斯方法，而对于基于Bert预训练模型的方法，通过调整参数能够进一步提高模型性能。
+
+# 5.实践总结
+
+&emsp;&emsp;经过本次实践，我了解了更多自然语言处理方面的知识和技能，同时对于自然语言处理中常见的分词、embedding操作等更加熟悉，能够在实践中利用课上学到的知识解决问题。除此之外，此次实践最大的收获是熟练掌握了关于服务器模型训练方面的操作，自主完成了服务器虚拟环境配置，并学会利用服务器进行多卡训练模型，利用git、xftp等工具实现本地、服务器和仓库的同步。
+
+&emsp;&emsp;总之，通过本次实践，我收获很多，在未来的学习生活中还需要继续锻炼，熟练各项操作，争取做得更好！
+
+# 相关参考
+
+&emsp;&emsp;
+
+[Bert模型详解]: http://www.noobyard.com/article/p-zwhutqmm-nu.html
+
+&emsp;&emsp;
+
+[自然语言处理三大模型介绍]: https://www.jianshu.com/p/8fc3baa4cf98
+
+&emsp;&emsp;
+
+[Bert模型(Pytorch)中文段落情感判断]: https://zhuanlan.zhihu.com/p/452189363
+
+
+
+
+
