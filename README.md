@@ -15,7 +15,7 @@
 
 &emsp;&emsp;数据集中的句子及标签格式示例如下：
 
-![Image](C:\Users\10158\Desktop\Image.png)
+![data](data.png)
 
 ## 3.实践过程
 
