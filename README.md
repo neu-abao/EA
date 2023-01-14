@@ -305,9 +305,11 @@ def test_fn(data_loader, model):
 
 &emsp;&emsp;[BERT模型详解](http://www.noobyard.com/article/p-zwhutqmm-nu.html)
 
-&emsp;&emsp;[自然语言处理三大模型介绍][https://www.jianshu.com/p/8fc3baa4cf98]
+&emsp;&emsp;[自然语言处理三大模型介绍](https://www.jianshu.com/p/8fc3baa4cf98)
 
-&emsp;&emsp;[Bert模型（Pytorch）中文段落情感判断][https://zhuanlan.zhihu.com/p/452189363]
+&emsp;&emsp;[Bert模型（Pytorch）中文段落情感判断](https://zhuanlan.zhihu.com/p/452189363)
+
+
 
 
 
